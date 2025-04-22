@@ -12,8 +12,8 @@ class AccountDeposit():
         self.__type = "DEPOSIT"
         self.__to_iban = to_iban
         self.__deposit_amount = deposit_amount
-        justnow = datetime.now(timezone.utc)
-        self.__deposit_date = datetime.timestamp(justnow)
+        utc_timestamp = datetime.now(timezone.utc)
+        self.__deposit_date = datetime.timestamp(utc_timestamp)
 
     def to_json(self):
         """returns the object data in json format"""
