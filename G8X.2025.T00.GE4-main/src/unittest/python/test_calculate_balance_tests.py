@@ -1,13 +1,19 @@
 """Tests for calculate balance"""
 #pylint: disable=broad-exception-caught
+
+import sys
+print(sys.path)
+import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../../main/python")))
+
+
 import datetime
-from unittest import TestCase
 import os.path
-from os import remove
 import json
 import hashlib
+from unittest import TestCase
 from freezegun import freeze_time
-from uc3m_money import (BALANCES_STORE_FILE,
+from src.main.python.uc3m_money import (BALANCES_STORE_FILE,
                         AccountManager,
                         TRANSACTIONS_STORE_FILE,
                         AccountManagementException,
@@ -22,7 +28,7 @@ class TestCalculateBalance(TestCase):
     def setUp(self):
         """ inicializo el entorno de prueba """
         if os.path.exists(BALANCES_STORE_FILE):
-            remove(BALANCES_STORE_FILE)
+            os.remove(BALANCES_STORE_FILE)
 
     @staticmethod
     def read_file():
