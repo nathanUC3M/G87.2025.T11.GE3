@@ -94,7 +94,7 @@ class TransferRequest:
 
     @property
     def time_stamp(self) :
-        """Read-only property that returns the timestamp of the request"""
+        """Read only property that returns the timestamp of the request"""
         return self.__time_stamp
 
     @property
