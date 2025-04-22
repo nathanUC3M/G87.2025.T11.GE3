@@ -22,8 +22,12 @@ class TransferRequest:
         justnow = datetime.now(timezone.utc)
         self.__time_stamp = datetime.timestamp(justnow)
 
-    def __str__(self):
-        return "Transfer:" + json.dumps(self.__dict__)
+    def __signature_string(self) -> str:
+        """
+        Composes a string representation of the transfer data
+        to be hashed and used as the unique transfer code.
+        """
+        return f"Transfer:{json.dumps(self.__dict__)}"
 
     def to_json(self):
         """returns the object information in json format"""
@@ -37,62 +41,63 @@ class TransferRequest:
             "time_stamp": self.__time_stamp,
             "transfer_code": self.transfer_code
         }
+
     @property
-    def from_iban(self):
-        """Sender's iban"""
+    def from_iban(self) -> str:
+        """Sender's IBAN."""
         return self.__from_iban
 
     @from_iban.setter
-    def from_iban(self, value):
+    def from_iban(self, value: str):
         self.__from_iban = value
 
     @property
-    def to_iban(self):
+    def to_iban(self) -> str:
         """receiver's iban"""
         return self.__to_iban
 
     @to_iban.setter
-    def to_iban(self, value):
+    def to_iban(self, value: str):
         self.__to_iban = value
 
     @property
-    def transfer_type(self):
+    def transfer_type(self) -> str:
         """Property representing the type of transfer: REGULAR, INMEDIATE or URGENT """
         return self.__transfer_type
     @transfer_type.setter
-    def transfer_type(self, value):
+    def transfer_type(self, value: str):
         self.__transfer_type = value
 
     @property
-    def transfer_amount(self):
+    def transfer_amount(self) -> float:
         """Property respresenting the transfer amount"""
         return self.__transfer_amount
     @transfer_amount.setter
-    def transfer_amount(self, value):
+    def transfer_amount(self, value: float):
         self.__transfer_amount = value
 
     @property
-    def transfer_concept(self):
+    def transfer_concept(self) -> str:
         """Property representing the transfer concept"""
         return self.__concept
     @transfer_concept.setter
-    def transfer_concept(self, value):
+    def transfer_concept(self, value: str):
         self.__concept = value
 
     @property
-    def transfer_date( self ):
-        """Property representing the transfer's date"""
+    def transfer_date( self ) -> str:
+        """Property representing the transfer's date in DD/MM/YYYY format"""
         return self.__transfer_date
     @transfer_date.setter
-    def transfer_date( self, value ):
+    def transfer_date( self, value: str ):
         self.__transfer_date = value
 
     @property
-    def time_stamp(self):
+    def time_stamp(self) -> float:
         """Read-only property that returns the timestamp of the request"""
         return self.__time_stamp
 
     @property
-    def transfer_code(self):
+    def transfer_code(self) -> str:
         """Returns the md5 signature (transfer code)"""
         return hashlib.md5(str(self).encode()).hexdigest()

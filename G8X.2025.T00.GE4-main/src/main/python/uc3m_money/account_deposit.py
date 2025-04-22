@@ -8,8 +8,8 @@ class AccountDeposit():
     def __init__(self,
                  to_iban: str,
                  deposit_amount: float):
-        self.__alg = "SHA-256"
-        self.__type = "DEPOSIT"
+        self.__algorithm = "SHA-256"
+        self.__transaction_type = "DEPOSIT"
         self.__to_iban = to_iban
         self.__deposit_amount = deposit_amount
         utc_timestamp = datetime.now(timezone.utc)
@@ -17,8 +17,8 @@ class AccountDeposit():
 
     def to_json(self):
         """returns the object data in json format"""
-        return {"alg": self.__alg,
-                "type": self.__type,
+        return {"alg": self.__algorithm,
+                "type": self.__transaction_type,
                 "to_iban": self.__to_iban,
                 "deposit_amount": self.__deposit_amount,
                 "deposit_date": self.__deposit_date,
@@ -26,7 +26,7 @@ class AccountDeposit():
 
     def signature_string(self):
         """Composes the string to be used for generating the key for the date"""
-        return "{alg:" + str(self.__alg) +",typ:" + str(self.__type) +",iban:" + \
+        return "{alg:" + str(self.__algorithm) + ",typ:" + str(self.__transaction_type) + ",iban:" + \
                str(self.__to_iban) + ",amount:" + str(self.__deposit_amount) + \
                ",deposit_date:" + str(self.__deposit_date) + "}"
 
