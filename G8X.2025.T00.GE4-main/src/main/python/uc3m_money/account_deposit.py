@@ -24,7 +24,7 @@ class AccountDeposit():
                 "deposit_date": self.__deposit_date,
                 "deposit_signature": self.deposit_signature}
 
-    def __signature_string(self):
+    def signature_string(self):
         """Composes the string to be used for generating the key for the date"""
         return "{alg:" + str(self.__alg) +",typ:" + str(self.__type) +",iban:" + \
                str(self.__to_iban) + ",amount:" + str(self.__deposit_amount) + \
@@ -59,4 +59,4 @@ class AccountDeposit():
     @property
     def deposit_signature( self ):
         """Returns the sha256 signature of the date"""
-        return hashlib.sha256(self.__signature_string().encode()).hexdigest()
+        return hashlib.sha256(self.signature_string().encode()).hexdigest()
