@@ -106,4 +106,4 @@ class TransferRequest:
     @property
     def transfer_code(self):
         """Returns the md5 signature (transfer code)"""
-        return hashlib.md5(str(self).encode()).hexdigest()
+        return hashlib.md5(self.signature_string().encode()).hexdigest()
