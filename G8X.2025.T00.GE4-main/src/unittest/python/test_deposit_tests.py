@@ -6,7 +6,7 @@ import hashlib
 from unittest import TestCase
 from os import remove
 from freezegun import freeze_time
-from src.main.python.uc3m_money import (JSON_FILES_PATH,
+from uc3m_money import (JSON_FILES_PATH,
                         DEPOSITS_STORE_FILE,
                         AccountManager,
                         JSON_FILES_DEPOSITS,

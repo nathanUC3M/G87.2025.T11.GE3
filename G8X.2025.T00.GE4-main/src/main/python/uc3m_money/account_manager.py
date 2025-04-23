@@ -109,7 +109,7 @@ class AccountManager:
             raise AccountManagementException ("Invalid concept format")
 
     def validate_transfer_date(self, transfer_date):
-        """validates the arrival date format  using regex"""
+        """Validates the arrival date format using regex"""
         date_format = re.compile(r"^(([0-2]\d|3[0-1])\/(0\d|1[0-2])\/\d\d\d\d)$")
         valid_date = date_format.fullmatch(transfer_date)
         if not valid_date:
@@ -241,7 +241,6 @@ class AccountManager:
             raise AccountManagementException("IBAN not found")
 
         last_balance = {"IBAN": iban,
-                        "time": datetime.timestamp(datetime.now(timezone.utc)),
                         "BALANCE": balance_count}
 
         balance_list = self._load_json_file(BALANCES_STORE_FILE, [])
