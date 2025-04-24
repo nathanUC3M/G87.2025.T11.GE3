@@ -3,8 +3,8 @@
 class AccountManagementException(Exception):
     """Personalised exception for Accounts Management"""
     def __init__(self, message):
-        super().__init__(message)
-        self.message = message
+        self.__message = message
+        super().__init__(self.message)
 
     @property
     def message(self):
@@ -13,5 +13,4 @@ class AccountManagementException(Exception):
 
     @message.setter
     def message(self,value):
-        """Sets the message value"""
         self.__message = value
