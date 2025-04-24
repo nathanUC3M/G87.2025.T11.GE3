@@ -2,14 +2,14 @@
 import re
 import json
 from datetime import datetime, timezone
-from uc3m_money.account_management_exception import AccountManagementException
-from uc3m_money.account_management_config import (TRANSFERS_STORE_FILE,
+from src.main.python.uc3m_money.account_management_exception import AccountManagementException
+from src.main.python.uc3m_money.account_management_config import (TRANSFERS_STORE_FILE,
                                         DEPOSITS_STORE_FILE,
                                         TRANSACTIONS_STORE_FILE,
                                         BALANCES_STORE_FILE)
 
-from uc3m_money.transfer_request import TransferRequest
-from uc3m_money.account_deposit import AccountDeposit
+from src.main.python.uc3m_money.transfer_request import TransferRequest
+from src.main.python.uc3m_money.account_deposit import AccountDeposit
 
 
 class AccountManager:
@@ -246,7 +246,7 @@ class AccountManager:
         except FileNotFoundError as exc:
             if default is not None:
                 return default
-            raise AccountManagementException("Wrong file or file path") from exc
+            raise AccountManagementException("Wrong file  or file path") from exc
         except json.JSONDecodeError as exc:
             raise AccountManagementException("JSON Decode Error - Wrong JSON Format") from exc
 
@@ -259,7 +259,7 @@ class AccountManager:
             with open(filepath, "w", encoding="utf-8", newline="") as file:
                 json.dump(data, file, indent=2)
         except FileNotFoundError as exc:
-            raise AccountManagementException("Wrong file or file path") from exc
+            raise AccountManagementException("Wrong file  or file path") from exc
         except json.JSONDecodeError as exc:
             raise AccountManagementException("JSON Decode Error - Wrong JSON Format") from exc
 
