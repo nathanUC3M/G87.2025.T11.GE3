@@ -14,6 +14,15 @@ from src.main.python.uc3m_money.account_deposit import AccountDeposit
 
 class AccountManager:
     """Class for providing the methods for managing the orders"""
+
+    _instance = None
+
+    def __new__(cls, *args, **kwargs):
+        """Singleton class, allows for only one instance"""
+        if cls._instance is None:
+            cls._instance = super(AccountManager, cls).__new__(cls)
+        return cls._instance
+
     def __init__(self):
         pass
 
