@@ -1,5 +1,5 @@
 """Defines the transfer concept"""
-from uc3m_money.data.attr.attribute import Attribute
+from src.main.python.uc3m_money.data.attr.attribute import Attribute
 
 class Concept(Attribute):
     """Defines the transfer concept"""

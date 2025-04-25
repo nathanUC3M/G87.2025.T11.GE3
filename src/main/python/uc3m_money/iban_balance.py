@@ -4,9 +4,9 @@ Handles reading transactions from a JSON file and raises AccountManagementExcept
 """
 import json
 from datetime import datetime, timezone
-from uc3m_money.account_management_exception import AccountManagementException
-from uc3m_money.data.attr.iban_code import IbanCode
-from uc3m_money.account_management_config import TRANSACTIONS_STORE_FILE
+from src.main.python.uc3m_money.account_management_exception import AccountManagementException
+from src.main.python.uc3m_money.data.attr.iban_code import IbanCode
+from src.main.python.uc3m_money.account_management_config import TRANSACTIONS_STORE_FILE
 
 
 class IbanBalance:

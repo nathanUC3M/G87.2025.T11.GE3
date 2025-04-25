@@ -2,7 +2,10 @@
 import hashlib
 import json
 from datetime import datetime, timezone
-from uc3m_money.data.attr.iban_code import IbanCode
+from src.main.python.uc3m_money.data.attr.iban_code import IbanCode
+from uc3m_money.data.attr.transfer_type import TransferType
+
+
 class TransferRequest:
     """Class representing a transfer request"""
     #pylint: disable=too-many-arguments
@@ -15,10 +18,10 @@ class TransferRequest:
                  transfer_amount:float):
         self.__from_iban = IbanCode(from_iban).value
         self.__to_iban = IbanCode(to_iban).value
-        self.__transfer_type = IbanCode(transfer_type).value
-        self.__concept = IbanCode(transfer_concept).value
-        self.__transfer_date = IbanCode(transfer_date).value
-        self.__transfer_amount = IbanCode(transfer_amount).value
+        self.__transfer_type = TransferType(transfer_type).value
+        self.__concept = transfer_concept
+        self.__transfer_date = transfer_date
+        self.__transfer_amount = transfer_amount
         justnow = datetime.now(timezone.utc)
         self.__time_stamp = datetime.timestamp(justnow)
 

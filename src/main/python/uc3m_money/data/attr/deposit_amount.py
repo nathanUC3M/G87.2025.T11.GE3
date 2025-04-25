@@ -1,6 +1,6 @@
 """Validates the deposit amount string"""
-from uc3m_money.account_management_exception import AccountManagementException
-from uc3m_money.data.attr.attribute import Attribute
+from src.main.python.uc3m_money.account_management_exception import AccountManagementException
+from src.main.python.uc3m_money.data.attr.attribute import Attribute
 
 class DepositAmount(Attribute):
     """Validates the deposit amount string"""
