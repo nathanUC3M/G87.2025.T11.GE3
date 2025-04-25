@@ -1,25 +1,32 @@
 import re
 from datetime import datetime, timezone
 from uc3m_money.account_management_exception import AccountManagementException
+from .attribute import Attribute
 
-class TransferDateValidator:
-    @staticmethod
-    def validate(date_str: str) -> str:
+
+class TransferDate(Attribute):
+    def __init__(self, attr_value):
         """
         Validates the transfer date:
         - Format DD/MM/YYYY
         - No earlier than today
         - Year between 2025 and 2050 inclusive
         """
-        pattern = re.compile(r"^([0-3]\d)/(0[1-9]|1[0-2])/([0-9]{4})$")
-        if not pattern.fullmatch(date_str):
-            raise AccountManagementException("Invalid date format")
+        self._validation_pattern = r"^(([0-2]\d|3[0-1])\/(0\d|1[0-2])\/\d\d\d\d)$"
+        self._error_message = "Invalid date format"
+        self._attr_value = self._validate(attr_value)
+
+    def _validate(self, attr_value):
+        attr_value = super()._validate(attr_value)
+
         try:
-            parsed = datetime.strptime(date_str, "%d/%m/%Y").date()
+            my_date = datetime.strptime(attr_value, "%d/%m/%Y").date()
         except ValueError as ex:
             raise AccountManagementException("Invalid date format") from ex
-        if parsed < datetime.now(timezone.utc).date():
+
+        if my_date < datetime.now(timezone.utc).date():
             raise AccountManagementException("Transfer date must be today or later.")
-        if parsed.year < 2025 or parsed.year > 2050:
+
+        if my_date.year < 2025 or my_date.year > 2050:
             raise AccountManagementException("Invalid date format")
-        return date_str
+        return attr_value

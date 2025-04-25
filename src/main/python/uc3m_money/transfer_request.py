@@ -15,10 +15,10 @@ class TransferRequest:
                  transfer_amount:float):
         self.__from_iban = IbanCode(from_iban).value
         self.__to_iban = IbanCode(to_iban).value
-        self.__transfer_type = transfer_type
-        self.__concept = transfer_concept
-        self.__transfer_date = transfer_date
-        self.__transfer_amount = transfer_amount
+        self.__transfer_type = IbanCode(transfer_type).value
+        self.__concept = IbanCode(transfer_concept).value
+        self.__transfer_date = IbanCode(transfer_date).value
+        self.__transfer_amount = IbanCode(transfer_amount).value
         justnow = datetime.now(timezone.utc)
         self.__time_stamp = datetime.timestamp(justnow)
 
