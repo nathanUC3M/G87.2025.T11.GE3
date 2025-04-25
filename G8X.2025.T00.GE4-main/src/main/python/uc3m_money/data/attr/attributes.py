@@ -1,7 +1,6 @@
 """Attribute definition"""
 import re
-
-from uc3m_money import AccountManagementException
+from uc3m_money.data.account_management_exception import AccountManagementException
 
 
 #pylint: disable= too-few-public-methods
@@ -27,3 +26,4 @@ class Attribute:
     @value.setter
     def value( self, attr_value ):
         self._attr_value = self._validate(attr_value)
+        

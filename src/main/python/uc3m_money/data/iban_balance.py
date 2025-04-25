@@ -1,12 +1,12 @@
-import json
+
 from uc3m_money import BALANCES_STORE_FILE, AccountManagementException, TRANSACTIONS_STORE_FILE
-from uc3m_money.attributes.attribute_iban import AttributeIban
+from uc3m_money.data.attr.iban_code import IbanCode
 from datetime import  datetime, timezone
 
 
 class IbanBalance():
     def __init__(self, iban):
-        self._iban = AttributeIban(iban).value
+        self._iban = IbanCode(iban).value
         self.__last_balance_time = datetime.timestamp(datetime.now(timezone.utc))
         self.__balance = self.calculate_balance()
 

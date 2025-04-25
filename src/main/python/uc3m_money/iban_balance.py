@@ -6,7 +6,7 @@ import json
 
 class IbanBalance():
     def __init__(self, iban):
-        self.iban = IbanCode(iban).value
+        self._iban = IbanCode(iban).value
         self.__last_balance_time = datetime.timestamp(datetime.now(timezone.utc))
         self.__balance = self.calculate_iban_balance()
 
@@ -36,6 +36,6 @@ class IbanBalance():
         return input_list
 
     def to_json(self):
-        return {"IBAN": self.iban,
+        return {"IBAN": self._iban,
                         "time": self.__last_balance_time,
                         "BALANCE": self.__balance}
