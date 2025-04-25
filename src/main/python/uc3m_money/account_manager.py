@@ -109,9 +109,9 @@ class AccountManager:
         stores it into a file"""
 
         self.validate_concept(concept)
-        mr = re.compile(r"(ORDINARY|INMEDIATE|URGENT)")
-        res = mr.fullmatch(transfer_type)
-        if not res:
+        country_code_check = re.compile(r"(ORDINARY|INMEDIATE|URGENT)")
+        valid_iban = country_code_check.fullmatch(transfer_type)
+        if not valid_iban:
             raise AccountManagementException("Invalid transfer type")
         self.validate_transfer_date(date)
 
@@ -124,8 +124,8 @@ class AccountManager:
 
         n_str = str(f_amount)
         if '.' in n_str:
-            decimales = len(n_str.split('.')[1])
-            if decimales > 2:
+            decimals = len(n_str.split('.')[1])
+            if decimals > 2:
                 raise AccountManagementException("Invalid transfer amount")
 
         if f_amount < 10 or f_amount > 10000:
@@ -186,9 +186,9 @@ class AccountManager:
 
 
         deposit_iban = self.valivan(deposit_iban)
-        myregex = re.compile(r"^EUR [0-9]{4}\.[0-9]{2}")
-        res = myregex.fullmatch(deposit_amount)
-        if not res:
+        amount_format = re.compile(r"^EUR [0-9]{4}\.[0-9]{2}")
+        valid_amount = amount_format.fullmatch(deposit_amount)
+        if not valid_amount:
             raise AccountManagementException("Error - Invalid deposit amount")
 
         d_a_f = float(deposit_amount[4:])

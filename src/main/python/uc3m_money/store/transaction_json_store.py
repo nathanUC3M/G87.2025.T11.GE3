@@ -7,7 +7,8 @@ class TransactionJsonStore(JsonStore):
     _FILE_NAME = TRANSACTIONS_STORE_FILE
 
     def find_all(self, key, value):
-        """returns a list with the items that contains the pair key:value received . The business logic concerning the sum o take away is in other class """
+        """returns a list with the items that contains the pair key:value received.
+        The business logic concerning the sum or take away is in other class """
         self.load_list_from_file()
         result_list = []
         for item in self._data_list:
