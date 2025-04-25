@@ -1,9 +1,10 @@
-import re
+"""Validates the transfer type"""
 from uc3m_money.account_management_exception import AccountManagementException
-from .attribute import Attribute
+from src.main.python.uc3m_money.data.attr.attribute import Attribute
 
 class TransferType(Attribute):
-    def validate(transfer_type: str) -> None:
+    """Class validates the transfer type"""
+    def validate(self, transfer_type: str) -> None:
         """
         Validates the transfer type:
         Must be one of ORDINARY, INMEDIATE, URGENT
@@ -12,8 +13,8 @@ class TransferType(Attribute):
             raise AccountManagementException("Invalid transfer type")
 
     def __init__(self, attr_value):
+        """Defines the transfer type validation"""
         super().__init__()
         self._validation_pattern = r"^(ORDINARY|INMEDIATE|URGENT)$"
         self._error_message = "Invalid transfer type"
-        # Ensure attr_value is uppercase for validation
         self._attr_value = self._validate(str(attr_value).upper())
