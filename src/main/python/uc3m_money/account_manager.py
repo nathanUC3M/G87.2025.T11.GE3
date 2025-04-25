@@ -1,16 +1,13 @@
 """Account manager module """
 import re
 import json
-from datetime import datetime, timezone
 from uc3m_money.account_management_exception import AccountManagementException
-from uc3m_money.account_management_config import (TRANSFERS_STORE_FILE,
-                                        DEPOSITS_STORE_FILE,
-                                        TRANSACTIONS_STORE_FILE,
-                                        BALANCES_STORE_FILE)
+from uc3m_money.account_management_config import (BALANCES_STORE_FILE)
 from uc3m_money.iban_balance import IbanBalance
-
+from uc3m_money.store.transfers_json_store import TransfersJsonStore
 from uc3m_money.transfer_request import TransferRequest
 from uc3m_money.account_deposit import AccountDeposit
+from uc3m_money.store.deposit_json_store import DepositJsonStore
 
 
 class AccountManager:
@@ -57,32 +54,8 @@ class AccountManager:
                                      transfer_date=date,
                                      transfer_amount=amount)
 
-        try:
-            with open(TRANSFERS_STORE_FILE, "r", encoding="utf-8", newline="") as file:
-                t_l = json.load(file)
-        except FileNotFoundError:
-            t_l = []
-        except json.JSONDecodeError as ex:
-            raise AccountManagementException("JSON Decode Error - Wrong JSON Format") from ex
-
-        for t_i in t_l:
-            if (t_i["from_iban"] == my_request.from_iban and
-                    t_i["to_iban"] == my_request.to_iban and
-                    t_i["transfer_date"] == my_request.transfer_date and
-                    t_i["transfer_amount"] == my_request.transfer_amount and
-                    t_i["transfer_concept"] == my_request.transfer_concept and
-                    t_i["transfer_type"] == my_request.transfer_type):
-                raise AccountManagementException("Duplicated transfer in transfer list")
-
-        t_l.append(my_request.to_json())
-
-        try:
-            with open(TRANSFERS_STORE_FILE, "w", encoding="utf-8", newline="") as file:
-                json.dump(t_l, file, indent=2)
-        except FileNotFoundError as ex:
-            raise AccountManagementException("Wrong file  or file path") from ex
-        except json.JSONDecodeError as ex:
-            raise AccountManagementException("JSON Decode Error - Wrong JSON Format") from ex
+        transfers_store = TransfersJsonStore()
+        transfers_store.add_item(my_request)
 
         return my_request.transfer_code
 
@@ -115,26 +88,10 @@ class AccountManager:
             raise AccountManagementException("Error - Deposit must be greater than 0")
 
         deposit_obj = AccountDeposit(to_iban=deposit_iban,
-                                     deposit_amount=d_a_f)
+                                     deposit_amount=deposit_amount)
 
-        try:
-            with open(DEPOSITS_STORE_FILE, "r", encoding="utf-8", newline="") as file:
-                d_l = json.load(file)
-        except FileNotFoundError as ex:
-            d_l = []
-        except json.JSONDecodeError as ex:
-            raise AccountManagementException("JSON Decode Error - Wrong JSON Format") from ex
-
-        d_l.append(deposit_obj.to_json())
-
-        try:
-            with open(DEPOSITS_STORE_FILE, "w", encoding="utf-8", newline="") as file:
-                json.dump(d_l, file, indent=2)
-        except FileNotFoundError as ex:
-            raise AccountManagementException("Wrong file  or file path") from ex
-        except json.JSONDecodeError as ex:
-            raise AccountManagementException("JSON Decode Error - Wrong JSON Format") from ex
-
+        deposits_json_store = DepositJsonStore()
+        deposits_json_store.add_item(deposit_obj)
         return deposit_obj.deposit_signature
 
 

@@ -1,6 +1,6 @@
 import re
 
-from uc3m_money import AccountManagementException
+from uc3m_money.account_management_exception import AccountManagementException
 
 
 #pylint: disable= too-few-public-methods
