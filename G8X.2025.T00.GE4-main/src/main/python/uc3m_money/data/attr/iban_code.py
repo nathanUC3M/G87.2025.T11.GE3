@@ -1,30 +1,15 @@
-import re
-from astroid import Attribute
-from uc3m_money import AccountManagementException
+from uc3m_money.data.account_management_exception import AccountManagementException
+from uc3m_money.data.attr.attributes import Attribute
 
-class AttributeIban(Attribute):
+class IbanCode(Attribute):
+    def __init__(self, attr_value):
+        self._validation_pattern = r"^ES[0-9]{22}"
+        self._error_message = "Invalid IBAN format"
+        self._attr_value = self._validate(attr_value)
 
-    def __init__(self, iban):
-        self.value = self.validate_iban(iban)
-
-
-
-    @staticmethod
-    def validate_iban(modified_iban: str):
-        """
-    Calcula el dígito de control de un IBAN español.
-
-    Args:
-        modified_iban (str): El IBAN sin los dos últimos dígitos (dígito de control).
-
-    Returns:
-        str: El dígito de control calculado.
-        """
-        country_code_check = re.compile(r"^ES[0-9]{22}")
-        valid_iban = country_code_check.fullmatch(modified_iban)
-        if not valid_iban:
-            raise AccountManagementException("Invalid IBAN format")
-        iban = modified_iban
+    def _validate(self, attr_value):
+        attr_value = super()._validate(attr_value)
+        iban = attr_value
         original_code = iban[2:4]
         # replacing the control
         iban = iban[:2] + "00" + iban[4:]
@@ -47,15 +32,16 @@ class AttributeIban(Attribute):
         # Mover los cuatro primeros caracteres al final
 
         # Convertir la cadena en un número entero
-        iban_integer = int(iban)
+        int_i = int(iban)
 
         # Calcular el módulo 97
-        iban_mod = iban_integer % 97
+        mod = int_i % 97
 
         # Calcular el dígito de control (97 menos el módulo)
-        valid_check_digits = 98 - iban_mod
+        dc = 98 - mod
 
-        if int(original_code) != valid_check_digits:
-            # print(valid_check_digits)
+        if int(original_code) != dc:
+            # print(dc)
             raise AccountManagementException("Invalid IBAN control digit")
-        return modified_iban
+
+        return attr_value

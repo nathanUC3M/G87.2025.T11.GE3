@@ -1,10 +1,14 @@
-import re
+"""Validates the transfer date"""
 from datetime import datetime, timezone
 from uc3m_money.account_management_exception import AccountManagementException
-from .attribute import Attribute
+from uc3m_money.data.attr.attribute import Attribute
 
 
 class TransferDate(Attribute):
+    """
+    Class TransferDate validates transfer date
+    according to rules below
+    """
     def __init__(self, attr_value):
         """
         Validates the transfer date:
@@ -12,6 +16,7 @@ class TransferDate(Attribute):
         - No earlier than today
         - Year between 2025 and 2050 inclusive
         """
+        super().__init__()
         self._validation_pattern = r"^(([0-2]\d|3[0-1])\/(0\d|1[0-2])\/\d\d\d\d)$"
         self._error_message = "Invalid date format"
         self._attr_value = self._validate(attr_value)
