@@ -10,6 +10,8 @@ from src.main.python.uc3m_money.account_management_config import (TRANSFERS_STOR
 
 from src.main.python.uc3m_money.transfer_request import TransferRequest
 from src.main.python.uc3m_money.account_deposit import AccountDeposit
+from uc3m_money.attributes.attribute_iban import AttributeIban
+from uc3m_money.iban_balance import IbanBalance
 
 
 class AccountManager:
@@ -26,58 +28,6 @@ class AccountManager:
     def __init__(self):
         pass
 
-    @staticmethod
-    def validate_iban(modified_iban: str):
-        """
-    Calcula el dígito de control de un IBAN español.
-
-    Args:
-        modified_iban (str): El IBAN sin los dos últimos dígitos (dígito de control).
-
-    Returns:
-        str: El dígito de control calculado.
-        """
-        country_code_check = re.compile(r"^ES[0-9]{22}")
-        valid_iban = country_code_check.fullmatch(modified_iban)
-        if not valid_iban:
-            raise AccountManagementException("Invalid IBAN format")
-        iban = modified_iban
-        original_code = iban[2:4]
-        #replacing the control
-        iban = iban[:2] + "00" + iban[4:]
-        iban = iban[4:] + iban[:4]
-
-
-        # Convertir el IBAN en una cadena numérica, reemplazando letras por números
-        iban = (iban.replace('A', '10').replace('B', '11').
-                replace('C', '12').replace('D', '13').replace('E', '14').
-                replace('F', '15'))
-        iban = (iban.replace('G', '16').replace('H', '17').
-                replace('I', '18').replace('J', '19').replace('K', '20').
-                replace('L', '21'))
-        iban = (iban.replace('M', '22').replace('N', '23').
-                replace('O', '24').replace('P', '25').replace('Q', '26').
-                replace('R', '27'))
-        iban = (iban.replace('S', '28').replace('T', '29').replace('U', '30').
-                replace('V', '31').replace('W', '32').replace('X', '33'))
-        iban = iban.replace('Y', '34').replace('Z', '35')
-
-        # Mover los cuatro primeros caracteres al final
-
-        # Convertir la cadena en un número entero
-        iban_integer = int(iban)
-
-        # Calcular el módulo 97
-        iban_mod = iban_integer % 97
-
-        # Calcular el dígito de control (97 menos el módulo)
-        valid_check_digits = 98 - iban_mod
-
-        if int(original_code) != valid_check_digits:
-            #print(valid_check_digits)
-            raise AccountManagementException("Invalid IBAN control digit")
-
-        return modified_iban
 
     def validate_concept(self, concept: str):
         """Regular expression for checking the minimum and maximum length as well as
@@ -119,8 +69,8 @@ class AccountManager:
         including the from and to iban, the concept, and
         the transfer
         """
-        self.validate_iban(from_iban)
-        self.validate_iban(to_iban)
+        AttributeIban(from_iban)
+        AttributeIban(to_iban)
         self.validate_concept(concept)
         regex_transfer = re.compile(r"(ORDINARY|INMEDIATE|URGENT)")
         valid_transfer = regex_transfer.fullmatch(transfer_type)
@@ -215,12 +165,12 @@ class AccountManager:
 
         return transfer_request.transfer_code
 
-    def validate_deposit_iban(self, input_data: dict) -> str:
+    def validate_deposit_iban(self, input_data: dict) -> AttributeIban:
         """
         Validate the IBAN from the deposit input data.
         """
         try:
-            return self.validate_iban(input_data["IBAN"])
+            return AttributeIban(input_data["IBAN"])
         except KeyError as e:
             raise AccountManagementException("Error - Invalid Key in JSON") from e
 
@@ -287,45 +237,14 @@ class AccountManager:
 
         return deposit_obj.deposit_signature
 
-    def read_transactions_file(self):
-        """Loads the content of the transactions file
-        and returns a list"""
-        return self._load_json_file(TRANSACTIONS_STORE_FILE)
 
-    @staticmethod
-    def get_balance(transactions: list, iban: str) -> tuple:
-        """
-        Calculate balance and check if IBAN exists in transactions.
-        """
-        balance = 0
-        found = False
-        for transaction in transactions:
-            if transaction["IBAN"] == iban:
-                balance += float(transaction["amount"])
-                found = True
-        return balance, found
-
-    def store_balance(self, iban: str, balance: float):
-        """
-        Store the current balance with timestamp for the given IBAN.
-        """
-        entry = {
-            "IBAN": iban,
-            "time": datetime.timestamp(datetime.now(timezone.utc)),
-            "BALANCE": balance
-        }
-        balance_list = self._load_json_file(BALANCES_STORE_FILE, default=[])
-        balance_list.append(entry)
-        self._write_json_file(BALANCES_STORE_FILE, balance_list)
 
     def calculate_balance(self, iban: str) -> bool:
         """Calculate the balance for a given iban"""
-        iban = self.validate_iban(iban)
-        transaction_list = self.read_transactions_file()
+        balance_list = self._load_json_file(BALANCES_STORE_FILE, default=[])
 
-        balance_count, iban_found = self.get_balance(transaction_list, iban)
-        if not iban_found:
-            raise AccountManagementException("IBAN not found")
+        iban_balance = IbanBalance(iban)
+        balance_list.append(iban_balance.store_balance())
+        self._write_json_file(BALANCES_STORE_FILE, balance_list)
 
-        self.store_balance(iban, balance_count)
         return True
