@@ -3,6 +3,7 @@ import hashlib
 import json
 from datetime import datetime, timezone
 from src.main.python.uc3m_money.data.attr.iban_code import IbanCode
+from uc3m_money.data.attr.concept import Concept
 from uc3m_money.data.attr.transfer_type import TransferType
 
 
@@ -80,7 +81,7 @@ class TransferRequest:
         return self.__concept
     @transfer_concept.setter
     def transfer_concept(self, value):
-        self.__concept = value
+        self.__concept = Concept(value).value
 
     @property
     def transfer_date( self ):

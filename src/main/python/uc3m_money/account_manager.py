@@ -10,12 +10,21 @@ from src.main.python.uc3m_money.account_management_config import (TRANSFERS_STOR
 
 from src.main.python.uc3m_money.transfer_request import TransferRequest
 from src.main.python.uc3m_money.account_deposit import AccountDeposit
+from uc3m_money.data.attr.concept import Concept
 
 
 class AccountManager:
     """Class for providing the methods for managing the orders"""
     def __init__(self):
         pass
+
+    _instance = None
+
+    def __new__(cls, *args, **kwargs):
+        """Singleton class, allows for only one instance"""
+        if cls._instance is None:
+            cls._instance = super(AccountManager, cls).__new__(cls)
+        return cls._instance
 
     @staticmethod
     def valivan(ic: str):
@@ -108,7 +117,7 @@ class AccountManager:
         """first method: receives transfer info and
         stores it into a file"""
 
-        self.validate_concept(concept)
+
         country_code_check = re.compile(r"(ORDINARY|INMEDIATE|URGENT)")
         valid_iban = country_code_check.fullmatch(transfer_type)
         if not valid_iban:
