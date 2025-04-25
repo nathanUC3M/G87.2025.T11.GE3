@@ -1,12 +1,12 @@
+"""Attribute class definition"""
 import re
-
 from uc3m_money import AccountManagementException
-
 
 #pylint: disable= too-few-public-methods
 class Attribute:
     """Attribute class definition"""
     def __init__( self ):
+        """Initialize attribute"""
         self._validation_pattern = r""
         self._error_message = ""
         self._attr_value = ""
